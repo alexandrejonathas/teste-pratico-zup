@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.zup.bancodigital.domain.exception.NegocioException;
 import br.com.zup.bancodigital.domain.exception.PropostaNaoEncontradaException;
+import br.com.zup.bancodigital.domain.model.Cliente;
 import br.com.zup.bancodigital.domain.model.Proposta;
 import br.com.zup.bancodigital.domain.repository.PropostaRepository;
 
@@ -22,11 +23,24 @@ public class PropostaService {
 	@Transactional
 	public Proposta salvar(Proposta proposta) {
 		
-		if(proposta.getCliente() == null) {
-			throw new NegocioException("O cliente da proposta é obrigatorio!");
-		}
+		validar(proposta);
 		
 		return propostaRepository.save(proposta);
 	}
 	
+	private void validar(Proposta proposta) {
+		Cliente cliente = proposta.getCliente();
+		if(cliente == null) {
+			throw new NegocioException("O cliente da proposta é obrigatorio!");
+		}
+		
+		if(cliente.semEnderecoCadastrado()) {
+			throw new NegocioException("O cliente da proposta precisa ter um endereço cadastrado.");
+		}
+
+		if(cliente.semFotoCpfCadastrada()) {
+			throw new NegocioException("O cliente da proposta precisa ter uma foto do cpf cadastrada.");
+		}		
+		
+	}
 }

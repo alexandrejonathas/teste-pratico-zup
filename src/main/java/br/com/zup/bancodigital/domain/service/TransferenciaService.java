@@ -1,6 +1,5 @@
 package br.com.zup.bancodigital.domain.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,7 @@ public class TransferenciaService {
 		for(Transferencia t : transferencias) {
 			Optional<Transferencia> tr = transferenciaRepository.findByContaAndCodigo(t.getAgenciaDestino(),t.getContaDestino(), t.getCodigo());
 			if(tr.isEmpty()) {
-				salvarTransferencia(t);				
+				verificarConta(t);				
 			}else {
 				System.out.println(String.format("Transferência de código %s já foi processada para a agencia %d conta %d.", 
 							t.getCodigo(), t.getAgenciaDestino(), t.getContaDestino()));
@@ -45,16 +44,23 @@ public class TransferenciaService {
 	}
 	
 	@Transactional
-	private void salvarTransferencia(Transferencia transferencia) {
+	private void verificarConta(Transferencia transferencia) {
 		Optional<Conta> contaOptional = contaRepository.findByAgenciaAndNumero(transferencia.getAgenciaDestino(), transferencia.getContaDestino());
 		if(contaOptional.isPresent()) {
-			Conta conta = contaOptional.get();
-			BigDecimal saldo = conta.getSaldo().add(transferencia.getValor());
-			conta.setSaldo(saldo);
-			salvar(transferencia);
+			salvarTransferencia(transferencia, contaOptional.get());
 		}else {
 			System.out.println(String.format("Conta não encontrada para agência %d conta %d.", 
 					transferencia.getAgenciaDestino(), transferencia.getContaDestino()));
+		}
+	}
+
+	@Transactional
+	private void salvarTransferencia(Transferencia transferencia, Conta conta) {
+		if(conta.receber(transferencia.getValor())) {				
+			salvar(transferencia);
+		}else {
+			System.out.println(String.format("A transferencia para agencia %d e conta %d de código %s tem um valor negativo por isso foi ignorada.", 
+					transferencia.getAgenciaDestino(), transferencia.getContaDestino(), transferencia.getCodigo()));			
 		}
 	}
 	

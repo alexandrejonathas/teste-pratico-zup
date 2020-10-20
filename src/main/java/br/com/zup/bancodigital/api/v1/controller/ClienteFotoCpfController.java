@@ -116,7 +116,8 @@ public class ClienteFotoCpfController {
 			
 			foto.setNome(arquivo.getOriginalFilename());
 			
-			FotoCpf fotoSalva = fotoCpfService.salvar(foto, arquivo.getInputStream());		
+			foto = fotoCpfService.salvar(foto, arquivo.getInputStream());		
+			cliente.setFotoCpf(foto);
 			
 			Proposta proposta = new Proposta();
 			proposta.setCliente(cliente);
@@ -125,7 +126,7 @@ public class ClienteFotoCpfController {
 			
 			ResourceUriHelper.addUriInResponseHeader("/v1/propostas/"+proposta.getId());
 			
-			return ResponseEntity.status(HttpStatus.CREATED).body(fotoCpfModelAssembler.toModel(fotoSalva));
+			return ResponseEntity.status(HttpStatus.CREATED).body(fotoCpfModelAssembler.toModel(foto));
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}catch (NegocioException e) {

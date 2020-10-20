@@ -1,5 +1,4 @@
 create table endereco (
-    id bigint not null auto_increment,
     cliente_id bigint not null,
     cep varchar(20) not null,
     rua varchar(100) not null,
@@ -8,7 +7,6 @@ create table endereco (
     cidade varchar(100) not null,
     estado varchar(60) not null,
     
-    primary key(id)
+    primary key(cliente_id),
+    constraint fk_enderco_cliente_id foreign key (cliente_id) references cliente (id)
 )engine=InnoDB default charset=utf8;
-
-ALTER TABLE endereco ADD CONSTRAINT fk_endereco_cliente_id foreign key (cliente_id) references cliente (id);

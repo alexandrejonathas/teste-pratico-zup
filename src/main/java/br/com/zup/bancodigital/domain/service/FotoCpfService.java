@@ -41,7 +41,6 @@ public class FotoCpfService {
 			FotoCpf fc = optionalFotoCpf.get();
 			nomeArquivoExistente = fc.getNome();
 			clienteRepository.delete(fc);
-			clienteRepository.flush();
 		}
 		
 		foto.setNome(nomeArquivo);

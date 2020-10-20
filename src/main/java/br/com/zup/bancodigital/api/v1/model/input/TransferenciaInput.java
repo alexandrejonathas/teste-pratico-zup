@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class TransferenciaInput {
 	@NotNull
 	private LocalDate data;
 	
+	@PositiveOrZero
 	@NotNull
 	private BigDecimal valor;
 	

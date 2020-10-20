@@ -5,6 +5,6 @@ create table foto_cpf (
 	tamanho int not null,
 	
 	primary key (cliente_id),
-	constraint fk_foto_cpf_cliente foreign key (cliente_id) references cliente (id)
+	constraint fk_foto_cpf_cliente_id foreign key (cliente_id) references cliente (id)
 	
 )engine=InnoDB default charset=utf8;

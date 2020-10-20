@@ -44,6 +44,14 @@ public class Conta {
 		this.gerarNumeroConta();
 	}
 	
+	public boolean receber(BigDecimal valor) {
+		if(valor.compareTo(BigDecimal.ZERO) == 1) {				
+			saldo = saldo.add(valor);
+			return true;
+		}	
+		return false;
+	}
+	
 	private void gerarAgencia() {
 		String numero = "";
 		for(int i = 0; i < 4; i++) {
